@@ -91,10 +91,10 @@ PanelWindow {
             spacing: 25
             RowLayout {
                 Layout.fillWidth: true
-                Rectangle { width: 46; height: 46; radius: 3; color: theme.accent; Label { anchors.centerIn: parent; text: "◉"; font.pixelSize: 27 } }
+                Image { Layout.preferredWidth: 46; Layout.preferredHeight: 46; source: Qt.resolvedUrl("assets/omapulse.svg"); fillMode: Image.PreserveAspectFit }
                 ColumnLayout {
                     spacing: 3
-                    Label { text: "Oma Owl"; color: theme.text; font.pixelSize: 27; font.weight: Font.DemiBold }
+                    Label { text: "Oma Pulse"; color: theme.text; font.pixelSize: 27; font.weight: Font.DemiBold }
                     Label { text: "A little room for your day."; color: theme.muted; font.pixelSize: 13 }
                 }
                 Item { Layout.fillWidth: true }

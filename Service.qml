@@ -134,7 +134,7 @@ Item {
     Process {
         command: ["python3", Qt.resolvedUrl("initialize.py").toString().replace("file://", "")]
         running: true
-        stderr: StdioCollector { onStreamFinished: if (text.trim()) console.warn("Oma Owl storage:", text.trim()) }
+        stderr: StdioCollector { onStreamFinished: if (text.trim()) console.warn("Oma Pulse storage:", text.trim()) }
         onExited: function(code) {
             if (code === 0) root.storagePrepared = true;
             else root.error = "Could not prepare workspace storage. Check " + root.dataDir;
@@ -148,7 +148,7 @@ Item {
         onLoaded: {
             if (root.ready || root.error) return;
             try { root.workspace = Logic.parse(text()); root.ready = true; root.changed(false, true); }
-            catch (e) { root.error = "Could not read saved workspace. Original file preserved."; console.warn("OmaOwl:", e); }
+            catch (e) { root.error = "Could not read saved workspace. Original file preserved."; console.warn("Oma Pulse:", e); }
         }
         onLoadFailed: { if (root.storagePrepared) root.error = "Workspace file unavailable. Check " + root.dataDir; }
         onSaveFailed: { root.error = "Saving failed. Keep this workspace open and check disk space."; }
@@ -189,7 +189,7 @@ Item {
                 root.changed(false);
                 if (result === "finished") {
                     root.notice = "Session complete. Take a breath.";
-                    Quickshell.execDetached(["notify-send", "OmaOwl · Focus complete", root.workspace.focus.title]);
+                    Quickshell.execDetached(["notify-send", "Oma Pulse · Focus complete", root.workspace.focus.title]);
                 } else if (result === "paused") root.notice = "Focus paused while the desktop was away.";
                 if (result !== "running" || Math.floor(root.workspace.focus.elapsed) % 5 === 0) root.flush();
             }
@@ -211,8 +211,7 @@ Item {
         }
         return windows.count ? windows.objectAt(0) : null;
     }
-    IpcHandler {
-        target: "omaowl"
+    component Control: IpcHandler {
         function open(): void { root.eachWindow(w => { w.pinned = true; w.open(); }); }
         function close(): void { root.eachWindow(w => { w.commandOpen = false; w.dashboardOpen = false; w.close(); }); }
         function dashboard(): void { if (windows.count > 0) windows.objectAt(0).openDashboard(); }
@@ -226,5 +225,7 @@ Item {
         }
         function mailStatus(): string { return JSON.stringify({connected: root.hey.connected, authenticated: root.hey.authenticated, newForYou: root.newMail.length, busy: root.hey.busy, error: root.hey.lastError}); }
     }
+    Control { target: "omapulse" }
+    Control { target: "omaowl" } // Compatibility for existing shortcuts.
     Component.onDestruction: flush()
 }

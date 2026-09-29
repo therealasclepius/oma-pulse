@@ -6,7 +6,7 @@ import subprocess
 root = Path(__file__).resolve().parent.parent
 for path in root.glob('*.py'):
     ast.parse(path.read_text(), filename=str(path))
-for path in [root/'install.sh', *root.glob('scripts/*.sh'), root/'bin/omaowl']:
+for path in [root/'install.sh', *root.glob('scripts/*.sh'), root/'bin/omaowl', root/'bin/omapulse']:
     subprocess.run(['bash', '-n', str(path)], check=True)
 for path in [root/'site/site.js', root/'scripts/build-site.cjs']:
     subprocess.run(['node', '--check', str(path)], check=True)

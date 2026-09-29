@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.0
+
+- Renamed Oma Owl to **Oma Pulse**, with new branding, a pulse icon and an `omapulse` launcher.
+- Retained old commands, plugin identity and data paths for a seamless upgrade.
+- Added a fifth website preview card for HEY email: sample messages, open, mark read and Undo.
+- Updated public URLs and added a redirect from the old website.
+- Added Kosta Hantzis’s social links to a shared footer on every page, including the branded 404 page.
+
 ## 0.5.0
 
 First public Omarchy release.

@@ -54,7 +54,7 @@ PanelWindow {
             ColumnLayout {
                 anchors.fill: parent; anchors.margins: 20; spacing: 12
                 RowLayout {
-                    Copy { text: "◉  OmaOwl"; color: theme.accent; font.pixelSize: 17; font.bold: true }
+                    Copy { text: "◉  Oma Pulse"; color: theme.accent; font.pixelSize: 17; font.bold: true }
                     Copy { text: "Command center"; color: theme.muted; Layout.fillWidth: true }
                     Action { text: "Workspace"; onClicked: win.workspaceRequested() }
                     Action { text: "×"; implicitWidth: 32; onClicked: win.dismissed(); Accessible.name: "Close command center" }
@@ -95,7 +95,7 @@ PanelWindow {
                             model: win.assistant.messages.slice(-3)
                             ColumnLayout {
                                 required property var modelData; Layout.fillWidth: true
-                                Copy { text: modelData.role === "user" ? "You" : modelData.role === "result" ? "Result" : "OmaOwl"; color: theme.accent; font.bold: true; font.pixelSize: 11 }
+                                Copy { text: modelData.role === "user" ? "You" : modelData.role === "result" ? "Result" : "Oma Pulse"; color: theme.accent; font.bold: true; font.pixelSize: 11 }
                                 TextEdit { text: parent.modelData.text; textFormat: parent.modelData.role === "assistant" ? TextEdit.MarkdownText : TextEdit.PlainText; onLinkActivated: function(link) { if (/^https?:\/\//i.test(link)) Qt.openUrlExternally(link); } readOnly: true; selectByMouse: true; wrapMode: TextEdit.Wrap; Layout.fillWidth: true; color: theme.text; font.family: theme.font; font.pixelSize: 14 }
                             }
                         }

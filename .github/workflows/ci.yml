@@ -20,9 +20,9 @@ jobs:
       - run: npm run release
       - uses: actions/upload-artifact@v4
         with:
-          name: oma-owl-source
+          name: oma-pulse-source
           path: |
-            dist/oma-owl-*.tar.gz
+            dist/oma-pulse-*.tar.gz
             dist/SHA256SUMS
   release:
     if: startsWith(github.ref, 'refs/tags/v')
@@ -33,11 +33,11 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: oma-owl-source
+          name: oma-pulse-source
           path: release
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           TAG: ${{ github.ref_name }}
-        run: gh release create "$TAG" release/* --verify-tag --title "Oma Owl $TAG" --generate-notes
+        run: gh release create "$TAG" release/* --verify-tag --title "Oma Pulse $TAG" --generate-notes

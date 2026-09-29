@@ -1,6 +1,6 @@
 # Data and security
 
-Oma Owl runs as an unsandboxed native plugin in the user's Omarchy shell. Review the code before installing.
+Oma Pulse runs as an unsandboxed native plugin in the user's Omarchy shell. Review the code before installing.
 
 - Local workspace data stays in `$XDG_DATA_HOME/omaowl` (default `~/.local/share/omaowl`). It is excluded from source and website builds.
 - Todoist credentials stay in `$XDG_CONFIG_HOME/omaowl/todoist.json`, mode 600. Requests pass through stdin to the Python helper; the key is never a command-line argument. API requests go to `https://api.todoist.com/api/v1/`.

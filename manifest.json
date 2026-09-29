@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "id": "kosta.omaowl",
-  "name": "Oma Owl",
-  "version": "0.5.0",
+  "name": "Oma Pulse",
+  "version": "0.6.0",
   "author": "Kosta / therealasclepius",
   "description": "A themed desktop command center with Codex, voice input, tasks, focus, calendar, and HEY mail.",
   "kinds": [
@@ -14,7 +14,7 @@
     "barWidget": "BarWidget.qml"
   },
   "barWidget": {
-    "displayName": "Oma Owl",
+    "displayName": "Oma Pulse",
     "category": "Productivity",
     "allowMultiple": false,
     "defaultSection": "center"

@@ -33,10 +33,13 @@ class InstallTests(unittest.TestCase):
             target=home/'.config/omarchy/plugins/kosta.omaowl'
             self.assertTrue((target/'.git').is_dir())
             self.assertTrue((home/'.local/bin/omaowl').is_symlink())
-            self.assertTrue((home/'.local/share/applications/omaowl.desktop').is_file())
+            self.assertTrue((home/'.local/bin/omapulse').is_symlink())
+            self.assertTrue((home/'.local/share/applications/omapulse.desktop').is_file())
             state=home/'.local/share/omaowl/workspace.json'
             state.write_text('{"notes":{"today":"Keep this note"}}')
             (target/'local-customization.txt').write_text('Keep this code')
+            legacy = home/'.local/share/applications/omaowl.desktop'
+            legacy.write_text('[Desktop Entry]\nName=Oma Owl\n')
             self.assertNotEqual(run(['bash','install.sh','--local','--no-enable'],check=False).returncode,0)
             self.assertTrue((target/'local-customization.txt').exists())
             run(['bash','install.sh','--local','--adopt','--no-enable'])
@@ -44,4 +47,7 @@ class InstallTests(unittest.TestCase):
             backups=list((home/'.local/share/omaowl-backups').glob('*/kosta.omaowl/local-customization.txt'))
             self.assertEqual(len(backups),1)
             self.assertEqual(backups[0].read_text(),'Keep this code')
-            self.assertIn('0.5.0',run([str(home/'.local/bin/omaowl'),'--version']).stdout)
+            self.assertFalse(legacy.exists())
+            self.assertTrue(list((home/'.local/share/omaowl-backups').glob('launcher-*/omaowl.desktop')))
+            self.assertIn('Oma Pulse',run([str(home/'.local/bin/omapulse'),'--version']).stdout)
+            self.assertIn('0.6.0',run([str(home/'.local/bin/omaowl'),'--version']).stdout)

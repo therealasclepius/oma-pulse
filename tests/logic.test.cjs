@@ -46,3 +46,23 @@ test("site build keeps helper code and credentials outside the public output", (
     ),
   );
 });
+test("every public HTML page includes the creator's social handles", () => {
+  const pages = fs
+    .readdirSync("dist/site")
+    .filter((file) => file.endsWith(".html"));
+  assert(pages.includes("index.html"));
+  assert(pages.includes("404.html"));
+  assert(!pages.includes("_footer.html"));
+  for (const page of pages) {
+    const html = fs.readFileSync(`dist/site/${page}`, "utf8");
+    for (const url of [
+      "https://twitter.com/kostahantzis",
+      "https://www.linkedin.com/in/kostahantzis/",
+      "https://www.instagram.com/kostahantzis/",
+      "https://www.youtube.com/@kostahantzis_",
+      "https://mentorpass.co/kostahantzis",
+    ])
+      assert(html.includes(url), `${page} is missing ${url}`);
+    assert(!html.includes("<!-- SITE_FOOTER -->"));
+  }
+});

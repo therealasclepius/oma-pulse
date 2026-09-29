@@ -1,17 +1,17 @@
-# Oma Owl
+# Oma Pulse
 
 **Your day, within reach.** A native workspace for Omarchy: tasks, focus, daily notes, calendar, mail and a desktop assistant.
 
-[Website & interactive preview](https://oma-owl.vercel.app/) · [Releases](https://github.com/therealasclepius/oma-owl/releases) · [Report an issue](https://github.com/therealasclepius/oma-owl/issues)
+[Website & interactive preview](https://oma-pulse.vercel.app/) · [Releases](https://github.com/therealasclepius/oma-pulse/releases) · [Report an issue](https://github.com/therealasclepius/oma-pulse/issues)
 
-Oma Owl runs inside Omarchy's Quickshell desktop. Hover over its bar icon for a quick look, click to pin it, or right-click for the full workspace. It follows your current theme. An application-menu launcher opens the same native workspace. This is an Omarchy Linux plugin, not an Electron wrapper or a cross-platform standalone app.
+Oma Pulse runs inside Omarchy's Quickshell desktop. Hover over its bar icon for a quick look, click to pin it, or right-click for the full workspace. It follows your current theme. An application-menu launcher opens the same native workspace. This is an Omarchy Linux plugin, not an Electron wrapper or a cross-platform standalone app.
 
 ## Installation
 
 Requires **Omarchy with its plugin-capable Quickshell shell** (tested on Omarchy 4.0.4), Git, Python 3.11+, Qt Quick Controls and `notify-send`. Omarchy supplies the desktop dependencies. Local tasks, notes and focus need no account. Node.js is only used for website development.
 
 ```sh
-curl -fsSL https://oma-owl.vercel.app/install.sh | bash
+curl -fsSL https://oma-pulse.vercel.app/install.sh | bash
 ```
 
 [Inspect the installer](install.sh). It clones the public repository, validates the manifest, enables `kosta.omaowl`, and installs a user-local application launcher. It never uses sudo, changes keyboard shortcuts or includes account credentials.
@@ -19,11 +19,11 @@ curl -fsSL https://oma-owl.vercel.app/install.sh | bash
 Alternatively, use Omarchy's plugin manager:
 
 ```sh
-omarchy plugin add https://github.com/therealasclepius/oma-owl.git --enable
+omarchy plugin add https://github.com/therealasclepius/oma-pulse.git --enable
 bash ~/.config/omarchy/plugins/kosta.omaowl/scripts/install-desktop.sh
 ```
 
-The plugin also initializes its storage when installed directly through the plugin manager. Open **Oma Owl** in the application menu, or run `omaowl`.
+The plugin also initializes its storage when installed directly through the plugin manager. Open **Oma Pulse** in the application menu, or run `omapulse`.
 
 ### Updating and removing
 
@@ -33,13 +33,17 @@ omarchy plugin update kosta.omaowl
 
 If a QML dependency remains cached, run `omarchy restart shell` after updating. Your local tasks, notes, credentials and focus history are stored outside the plugin directory.
 
-Disable with `omarchy plugin disable kosta.omaowl`; remove with `omarchy plugin remove kosta.omaowl`. To remove launcher files too, remove `~/.local/bin/omaowl`, `$XDG_DATA_HOME/applications/omaowl.desktop` and `$XDG_DATA_HOME/icons/hicolor/scalable/apps/omaowl.svg` (data home defaults to `~/.local/share`). User data is deliberately retained.
+Disable with `omarchy plugin disable kosta.omaowl`; remove with `omarchy plugin remove kosta.omaowl`. To remove launcher files too, remove `~/.local/bin/omapulse`, the legacy `~/.local/bin/omaowl` alias, `$XDG_DATA_HOME/applications/omapulse.desktop` and `$XDG_DATA_HOME/icons/hicolor/scalable/apps/omapulse.svg` (data home defaults to `~/.local/share`). User data is deliberately retained.
 
 Existing local prototype: download and inspect `install.sh`, then run `bash install.sh --adopt`. This moves the old plugin into `$XDG_DATA_HOME/omaowl-backups/` before replacement, preserving your existing plugin ID, bar placement, shortcuts, workspace and connection files. Ordinary installation refuses to overwrite an existing plugin.
 
 ### Keyboard shortcut
 
-Bind `omaowl command` in your Hyprland bindings using a key you choose. Existing Super+N bindings from the local prototype continue to work; a fresh install does not claim that shortcut. `omaowl dashboard` opens full screen; Escape returns to the compact workspace.
+Bind `omapulse command` in your Hyprland bindings using a key you choose. Existing Super+N bindings from the local prototype continue to work; a fresh install does not claim that shortcut. `omapulse dashboard` opens full screen; Escape returns to the compact workspace.
+
+## Renamed from Oma Owl
+
+Oma Pulse is the new name from version 0.6.0. The original GitHub URL redirects to the new repository, and the old website redirects to the new site. The plugin identifier `kosta.omaowl` and `omaowl` data directories intentionally remain stable so updates preserve accounts, notes and bar placement. Existing `omaowl` commands and IPC shortcuts still work; new installations also provide `omapulse`. Run the desktop installer once after updating to refresh your app-menu name and icon.
 
 ## Connections
 
@@ -84,9 +88,9 @@ directory. It never enters process arguments or shell.json. Network calls go
 only to `https://api.todoist.com/api/v1/`. Requests follow the
 [official Todoist API](https://developer.todoist.com/api/v1/).
 
-Disconnect removes OmaOwl's local credential; it does not delete Todoist data.
+Disconnect removes Oma Pulse's local credential; it does not delete Todoist data.
 Completed Todoist tasks remain in Todoist history; this UI currently shows active
-tasks only. Insights counts tasks completed through OmaOwl, not all Todoist history.
+tasks only. Insights counts tasks completed through Oma Pulse, not all Todoist history.
 
 ## Calendar
 
@@ -94,7 +98,7 @@ Use ‹ / › in the Events card to switch days, and **Back to today** to reset.
 The date and full day's events change together. Arrows stop at the limits of
 OmaCal's feed, currently today plus seven days. Event times use OmaCal's published
 clock labels where available. Calendar access is read only; synchronization is
-managed by OmaCal. No extra calendar account connection is needed. Clicking an event opens the full OmaCal app on that day and closes Oma Owl.
+managed by OmaCal. No extra calendar account connection is needed. Clicking an event opens the full OmaCal app on that day and closes Oma Pulse.
 
 ## Focus and notes
 
@@ -123,7 +127,7 @@ but this version does not send mail, modify arbitrary system settings, or execut
 
 **Voice** uses the existing Voxtype daemon. Click again to stop; the transcript fills the input
 for review before submission. No wake-word listener or spoken replies are enabled. Closing the
-window cancels an active OmaOwl recording. Codex can use live web search for weather, news, and current facts. Answers include source links. Desktop tool access stays disabled, with an isolated
+window cancels an active Oma Pulse recording. Codex can use live web search for weather, news, and current facts. Answers include source links. Desktop tool access stays disabled, with an isolated
 working directory; it only proposes actions, which the app validates and runs for direct requests.
 
 ## HEY mail
@@ -149,13 +153,13 @@ instead of silently overwritten. Todoist active tasks are fetched from the serve
 ## Commands
 
 ```sh
-omarchy-shell omaowl toggle
-omarchy-shell omaowl command
-omarchy-shell omaowl assistant
-omarchy-shell omaowl open
-omarchy-shell omaowl dashboard
-omarchy-shell omaowl close
-omarchy-shell omaowl status
+omarchy-shell omapulse toggle
+omarchy-shell omapulse command
+omarchy-shell omapulse assistant
+omarchy-shell omapulse open
+omarchy-shell omapulse dashboard
+omarchy-shell omapulse close
+omarchy-shell omapulse status
 omarchy plugin disable kosta.omaowl
 omarchy plugin enable kosta.omaowl
 ```
@@ -184,4 +188,4 @@ omarchy plugin validate .
 
 ## License and credits
 
-Publicly viewable source; no open-source license is granted at this time (`UNLICENSED`), following Oma Beats' distribution model. Barlow is used under the included SIL Open Font License. The original workspace concept was inspired by NotchOwl; Oma Owl is an independent project, not affiliated with Omarchy or its connected services.
+Publicly viewable source; no open-source license is granted at this time (`UNLICENSED`), following Oma Beats' distribution model. Barlow is used under the included SIL Open Font License. The original workspace concept was inspired by NotchOwl; Oma Pulse is an independent project, not affiliated with Omarchy or its connected services.

@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""OmaOwl's Codex planner and explicit, bounded desktop actions."""
+"""Oma Pulse's Codex planner and explicit, bounded desktop actions."""
 import configparser
 from datetime import datetime
 import json
@@ -24,7 +24,7 @@ SCHEMA = {"type": "object", "additionalProperties": False, "required": ["answer"
         "type": "object", "additionalProperties": False, "required": ["kind", "value", "number", "task_id"],
         "properties": {"kind": {"type": "string", "enum": KINDS}, "value": {"type": "string"},
                        "number": {"type": "integer"}, "task_id": {"type": "string"}}}}}}
-INSTRUCTIONS = """You are OmaOwl, a personal desktop assistant for Omarchy Linux.
+INSTRUCTIONS = """You are Oma Pulse, a personal desktop assistant for Omarchy Linux.
 Answer questions and propose concrete actions from the supported list. You may use web search for information, but never execute desktop actions yourself
 or claim an action has happened. Set auto_run=true when the current user explicitly asks you to perform
 supported actions (including polite requests such as "can you set a timer?"). The app runs those actions

@@ -19,10 +19,10 @@ BarWidget {
         id: button
         anchors.fill: parent
         bar: root.bar
-        text: "◉"
+        iconComponent: Component { Image { source: Qt.resolvedUrl("assets/omapulse.svg"); fillMode: Image.PreserveAspectFit } }
         active: root.opened || (root.service && root.service.focusState.running)
         interactive: root.panel !== null
-        tooltipText: root.service && root.service.focusState.running ? "OmaOwl · " + root.service.timerText : "OmaOwl · Tasks, focus, notes and calendar"
+        tooltipText: root.service && root.service.focusState.running ? "Oma Pulse · " + root.service.timerText : "Oma Pulse · Tasks, focus, notes and calendar"
         onTooltipHoveredChanged: {
             if (tooltipHovered && !root.opened) hoverTimer.restart();
             else hoverTimer.stop();

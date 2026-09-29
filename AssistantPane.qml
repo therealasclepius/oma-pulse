@@ -45,7 +45,7 @@ Rectangle {
                     ColumnLayout {
                         required property var modelData
                         Layout.fillWidth: true; spacing: 5
-                        Copy { text: modelData.role === "user" ? "You" : modelData.role === "result" ? "Result" : "OmaOwl"; color: theme.accent; font.bold: true; font.pixelSize: 11 }
+                        Copy { text: modelData.role === "user" ? "You" : modelData.role === "result" ? "Result" : "Oma Pulse"; color: theme.accent; font.bold: true; font.pixelSize: 11 }
                         TextEdit { text: parent.modelData.text; textFormat: parent.modelData.role === "assistant" ? TextEdit.MarkdownText : TextEdit.PlainText; onLinkActivated: function(link) { if (/^https?:\/\//i.test(link)) Qt.openUrlExternally(link); } readOnly: true; selectByMouse: true; wrapMode: TextEdit.Wrap; Layout.fillWidth: true; color: theme.text; font.family: theme.font; font.pixelSize: 14; selectionColor: theme.accent; selectedTextColor: theme.background }
                     }
                 }
@@ -71,7 +71,7 @@ Rectangle {
         RowLayout {
             TextField {
                 id: input; objectName: "assistant-input"; Layout.fillWidth: true; implicitHeight: 44
-                placeholderText: "Ask OmaOwl…"; maximumLength: 8000; color: theme.text; placeholderTextColor: theme.muted
+                placeholderText: "Ask Oma Pulse…"; maximumLength: 8000; color: theme.text; placeholderTextColor: theme.muted
                 font.family: theme.font; font.pixelSize: 15; padding: 12; onAccepted: pane.submit()
                 background: Rectangle { color: theme.background; border.color: input.activeFocus ? theme.accent : theme.border; radius: 3 }
             }

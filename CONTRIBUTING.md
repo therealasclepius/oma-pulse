@@ -1,6 +1,6 @@
 # Development
 
-Oma Owl is QML/JavaScript plus Python standard-library helpers. The landing page is static HTML, CSS and JavaScript.
+Oma Pulse is QML/JavaScript plus Python standard-library helpers. The landing page is static HTML, CSS and JavaScript.
 
 Run `npm run check`, `npm test`, and `npm run build:site`. Node is a developer/website dependency, not an installed plugin dependency. On Omarchy, also run `omarchy plugin validate .` and parse QML with the installed `qmlformat` tool. Use a temporary HOME and XDG directories for integration tests; never use real Todoist or mail credentials in fixtures.
 
