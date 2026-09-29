@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Oma Owl — Your day, within reach.</title>
+    <meta
+      name="description"
+      content="A native workspace for Omarchy. Tasks, focus, daily notes, calendar, mail and a desktop assistant, one glance away."
+    />
+    <meta name="theme-color" content="#171c17" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Oma Owl — Your day, within reach." />
+    <meta
+      property="og:description"
+      content="A little room for your day. A native workspace for Omarchy Linux."
+    />
+    <meta
+      property="og:image"
+      content="https://oma-owl.vercel.app/assets/social.png"
+    />
+    <meta property="og:url" content="https://oma-owl.vercel.app/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href="https://oma-owl.vercel.app/" />
+    <link rel="icon" href="/assets/omaowl.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/style.css" />
+    <script defer src="/site.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="header wrap">
+      <a class="brand" href="/" aria-label="Oma Owl home"
+        ><img src="/assets/omaowl.svg" width="35" height="35" alt="" /><span
+          >oma owl<span class="brand-dot">.</span></span
+        ></a
+      >
+      <nav aria-label="Main navigation">
+        <a href="#workspace">The workspace</a
+        ><a href="#integrations">Connections</a
+        ><a href="https://github.com/therealasclepius/oma-owl"
+          >GitHub <span aria-hidden="true">↗</span></a
+        >
+      </nav>
+      <a class="button small" href="#install"
+        >Get Oma Owl <span aria-hidden="true">↗</span></a
+      >
+    </header>
+    <main id="main">
+      <section class="hero wrap">
+        <div class="eyebrow">
+          <span class="status-dot"></span> A native companion for Omarchy
+          <span class="version">v0.5.0</span>
+        </div>
+        <h1>Your day,<br /><em>within reach.</em></h1>
+        <div class="hero-bottom">
+          <p>
+            Tasks to finish. A thought to keep. A little time to focus.<br />Give
+            your day a home, right on your desktop.
+          </p>
+          <a href="#workspace" class="text-link"
+            >Take a look around <span aria-hidden="true">↓</span></a
+          >
+        </div>
+        <div class="workspace-shell" id="workspace">
+          <div class="desktop-bar">
+            <span class="desktop-workspaces">◧ <b>1</b> 2 3 <span>·</span></span
+            ><span class="bar-center"
+              ><img src="/assets/omaowl.svg" width="18" height="18" alt="" />
+              Tue, 29 Sep <span class="bar-time">09:41</span></span
+            ><span aria-hidden="true">◔ &nbsp;⌁ &nbsp;▰</span>
+          </div>
+          <div class="demo-top">
+            <div>
+              <span class="demo-title">Oma Owl</span
+              ><span class="demo-subtitle">A little room for your day.</span>
+            </div>
+            <div class="demo-controls">
+              <span class="pinned">● Pinned</span
+              ><span class="demo-badge">Interactive preview</span>
+            </div>
+          </div>
+          <div class="workspace-grid">
+            <section class="panel task-panel">
+              <div class="panel-heading">
+                <span class="panel-number">01</span>
+                <h2>Tasks</h2>
+                <span id="task-count">3 to do</span>
+              </div>
+              <p class="panel-kicker">A little progress, every day.</p>
+              <div class="sample-tasks">
+                <label class="sample-task"
+                  ><input type="checkbox" /><span
+                    >Make room for the next idea<small
+                      >Today · Personal</small
+                    ></span
+                  ></label
+                ><label class="sample-task"
+                  ><input type="checkbox" /><span
+                    >Finish the first draft<small>Today · Studio</small></span
+                  ></label
+                ><label class="sample-task"
+                  ><input type="checkbox" /><span
+                    >Take the long way home<small
+                      >Today · Life outside</small
+                    ></span
+                  ></label
+                >
+              </div>
+              <p class="panel-foot">Todoist or local. Your choice.</p>
+            </section>
+            <section class="panel focus-panel">
+              <div class="panel-heading">
+                <span class="panel-number">02</span>
+                <h2>Focus</h2>
+                <span aria-hidden="true">◴</span>
+              </div>
+              <p class="panel-kicker">One thing at a time.</p>
+              <div class="timer" aria-label="Focus time remaining" id="timer">
+                25<span>:</span>00
+              </div>
+              <div class="focus-controls">
+                <button class="timer-start" id="timer-start" type="button">
+                  Start focusing <span aria-hidden="true">▶</span></button
+                ><button
+                  class="timer-reset"
+                  id="timer-reset"
+                  type="button"
+                  aria-label="Reset focus timer"
+                >
+                  ↺
+                </button>
+              </div>
+              <p class="panel-foot" id="focus-status" aria-live="polite">
+                No rush. Just a beginning.
+              </p>
+            </section>
+            <section class="panel notes-panel">
+              <div class="panel-heading">
+                <span class="panel-number">03</span>
+                <h2>Notepad</h2>
+                <span aria-hidden="true">↗</span>
+              </div>
+              <p class="panel-kicker">Tuesday, 29 September</p>
+              <textarea
+                id="demo-note"
+                aria-label="Try the daily notepad"
+                spellcheck="false"
+              >
+Less switching.
+More doing.
+
+What’s on your mind?</textarea>
+              <p class="panel-foot" id="note-status" aria-live="polite">
+                Try a thought. This preview stays in this tab.
+              </p>
+            </section>
+            <section class="panel calendar-panel">
+              <div class="panel-heading">
+                <span class="panel-number">04</span>
+                <h2>Events</h2>
+                <span aria-hidden="true">▦</span>
+              </div>
+              <div class="calendar-nav">
+                <span id="calendar-date">Today</span
+                ><button
+                  type="button"
+                  id="previous-day"
+                  aria-label="Previous preview day"
+                >
+                  ‹</button
+                ><button
+                  type="button"
+                  id="next-day"
+                  aria-label="Next preview day"
+                >
+                  ›
+                </button>
+              </div>
+              <div id="preview-events">
+                <div class="event">
+                  <small>10:00 — 10:30</small
+                  ><strong>A fresh perspective</strong
+                  ><span>Studio calendar</span>
+                </div>
+                <div class="event">
+                  <small>14:00 — 15:00</small
+                  ><strong>Time to make something</strong
+                  ><span>Personal calendar</span>
+                </div>
+              </div>
+              <p class="panel-foot">Your calendar, through OmaCal.</p>
+            </section>
+          </div>
+          <div class="demo-bottom">
+            <span
+              ><span class="status-dot"></span> Your day, a little closer.</span
+            ><span>Sample data · Try the tasks, timer and notes</span>
+          </div>
+        </div>
+        <div class="under-preview">
+          <span>Built for the desktop you already love.</span
+          ><span
+            >Omarchy Linux <span class="separator">/</span> Native Quickshell
+            <span class="separator">/</span> Follows your theme</span
+          >
+        </div>
+      </section>
+      <section class="intro wrap" id="details">
+        <div class="eyebrow">Less reaching. More room.</div>
+        <div class="intro-grid">
+          <h2>A small space.<br />A clearer day.</h2>
+          <div>
+            <p class="large-copy">
+              The things you keep coming back to, brought together in one quiet
+              workspace.
+            </p>
+            <p>
+              Hover to take a look. Click to keep it close. Open the full
+              workspace when you need more room. Oma Owl lives in your Omarchy
+              bar and follows your desktop’s colors and type.
+            </p>
+          </div>
+        </div>
+      </section>
+      <section class="features wrap" aria-label="Features">
+        <article>
+          <span class="feature-icon" aria-hidden="true">✓</span>
+          <h3>From a task to a start.</h3>
+          <p>
+            Keep a simple local list, or connect Todoist. Add a task, set a
+            reminder, open its details, or turn it into your next focus session.
+          </p>
+          <span class="feature-tag">Tasks + focus</span>
+        </article>
+        <article>
+          <span class="feature-icon" aria-hidden="true">↳</span>
+          <h3>Keep that thought.</h3>
+          <p>
+            A fresh notepad for each day, saved as you type. Turn a line into a
+            task with Ctrl+Enter, and revisit yesterday when you need to.
+          </p>
+          <span class="feature-tag">Daily notes</span>
+        </article>
+        <article>
+          <span class="feature-icon" aria-hidden="true">⌘</span>
+          <h3>Just ask your desktop.</h3>
+          <p>
+            Find an app, start a timer, or ask about your day. Optional Codex
+            and Voxtype integrations bring conversation and voice to the command
+            bar.
+          </p>
+          <span class="feature-tag">Commands + assistant</span>
+        </article>
+      </section>
+      <section class="connections" id="integrations">
+        <div class="wrap connection-grid">
+          <div>
+            <div class="eyebrow">Your tools, together</div>
+            <h2>Make yourself<br />at home.</h2>
+            <p>
+              Start with local tasks, notes and a timer.<br />Connect the rest
+              when it suits you.
+            </p>
+            <a
+              href="https://github.com/therealasclepius/oma-owl#connections"
+              class="text-link"
+              >Read the setup guide <span aria-hidden="true">↗</span></a
+            >
+          </div>
+          <div class="integration-list">
+            <div>
+              <span class="integration-symbol todoist-symbol">✓</span
+              ><strong>Todoist</strong>
+              <p>Tasks, Quick Add & reminders</p>
+              <span>Optional</span>
+            </div>
+            <div>
+              <span class="integration-symbol">▦</span><strong>OmaCal</strong>
+              <p>Your upcoming days, at a glance</p>
+              <span>Optional</span>
+            </div>
+            <div>
+              <span class="integration-symbol">@</span><strong>HEY</strong>
+              <p>New for You, with quick actions</p>
+              <span>Optional</span>
+            </div>
+            <div>
+              <span class="integration-symbol">✳</span><strong>Codex</strong>
+              <p>A desktop assistant that knows the day</p>
+              <span>Optional</span>
+            </div>
+            <div>
+              <span class="integration-symbol">≋</span><strong>Voxtype</strong>
+              <p>Say it. Review it. Send it.</p>
+              <span>Optional</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="privacy wrap">
+        <span class="eyebrow">A place of your own</span>
+        <h2>
+          Your notes live on your machine.<br />Your connections stay your
+          choice.
+        </h2>
+        <p>
+          Local tasks, notes and focus history are stored on your desktop.
+          Connected services use your own accounts. When you ask the assistant,
+          the visible workspace context goes to Codex; mail previews can be
+          switched off. This website has no analytics or account connection.
+        </p>
+      </section>
+      <section class="install wrap" id="install">
+        <div class="install-copy">
+          <img src="/assets/omaowl.svg" width="64" height="64" alt="" />
+          <div class="eyebrow">Settle in</div>
+          <h2>A little room<br />for your day.</h2>
+          <p>
+            Install Oma Owl on Omarchy.<br />Then find it in your bar or
+            application menu.
+          </p>
+          <a
+            class="text-link"
+            href="https://github.com/therealasclepius/oma-owl/releases/latest"
+            >Release notes <span aria-hidden="true">↗</span></a
+          >
+        </div>
+        <div class="install-card">
+          <div class="install-card-top">
+            <span>01 / INSTALL</span><span>Omarchy Linux</span>
+          </div>
+          <h3>One command. Your workspace.</h3>
+          <div class="command-box">
+            <code id="install-command"
+              >curl -fsSL https://oma-owl.vercel.app/install.sh | bash</code
+            ><button
+              id="copy-install"
+              type="button"
+              aria-label="Copy installation command"
+            >
+              Copy
+            </button>
+          </div>
+          <p id="copy-status" class="copy-status" role="status">
+            User-local installation. No administrator password.
+          </p>
+          <ol>
+            <li><span>01</span> Run the command in your terminal.</li>
+            <li>
+              <span>02</span> Open <strong>Oma Owl</strong> from your app menu.
+            </li>
+            <li><span>03</span> Add a task. Make yourself at home.</li>
+          </ol>
+          <div class="install-links">
+            <a href="/install.sh">Inspect the installer ↗</a
+            ><a href="https://github.com/therealasclepius/oma-owl#installation"
+              >Manual installation ↗</a
+            >
+          </div>
+          <p class="requirements">
+            Requires the plugin-capable Omarchy shell, Git and Python 3.
+            Optional integrations are installed separately. Native Linux plugin;
+            no Windows or macOS build.
+          </p>
+        </div>
+      </section>
+      <section class="faq wrap">
+        <div class="eyebrow">A few useful things</div>
+        <details>
+          <summary>Is this a standalone app or a plugin?<span>+</span></summary>
+          <p>
+            Oma Owl is a native Omarchy shell plugin with an application-menu
+            launcher and a full-screen workspace. It runs inside Quickshell and
+            needs the Omarchy desktop. The website preview is a small
+            interactive illustration, not the installed app.
+          </p>
+        </details>
+        <details>
+          <summary>Do I need any connected accounts?<span>+</span></summary>
+          <p>
+            No. Local tasks, daily notes, the focus timer and insights work
+            without accounts. Todoist, OmaCal, HEY, Codex and Voxtype provide
+            optional features; their own accounts, installations and service
+            terms apply.
+          </p>
+        </details>
+        <details>
+          <summary>How do I update it?<span>+</span></summary>
+          <p>
+            Run <code>omarchy plugin update kosta.omaowl</code>. Your notes,
+            local tasks and connection settings live outside the plugin
+            directory. See the README for backups and removal.
+          </p>
+        </details>
+        <details>
+          <summary>Can I use my own keyboard shortcut?<span>+</span></summary>
+          <p>
+            Yes. Bind <code>omaowl command</code> in your Hyprland
+            configuration. The installer leaves your existing shortcuts alone.
+            You can always open Oma Owl from the application menu or bar.
+          </p>
+        </details>
+      </section>
+    </main>
+    <footer class="footer wrap">
+      <a class="brand" href="/"
+        ><img src="/assets/omaowl.svg" width="28" height="28" alt="" /><span
+          >oma owl.</span
+        ></a
+      >
+      <p>Made for a day that feels like yours.</p>
+      <div>
+        <a href="https://github.com/therealasclepius/oma-owl">Source ↗</a
+        ><a href="https://github.com/therealasclepius/oma-owl/issues"
+          >Feedback ↗</a
+        ><a href="https://oma-beats.vercel.app/">Also: Oma Beats ↗</a>
+      </div>
+      <span class="footer-note"
+        >An independent project for Omarchy. Not affiliated with connected
+        services.</span
+      >
+    </footer>
+  </body>
+</html>
