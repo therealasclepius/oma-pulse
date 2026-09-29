@@ -46,7 +46,10 @@ mv -- "$stage/plugin" "$target"
 python3 "$target/initialize.py"
 bash "$target/scripts/install-desktop.sh"
 if $enable; then
-  omarchy-shell shell rescanPlugins >/dev/null
+  if ! omarchy-shell shell rescanPlugins >/dev/null; then
+    echo "Reloading the shell to finish registering Oma Owl…"
+    omarchy restart shell
+  fi
   for ((attempt = 0; attempt < 40; attempt++)); do
     if omarchy plugin list --json | jq -e --arg id "$plugin_id" 'any(.[]; .id == $id)' >/dev/null; then break; fi
     sleep 0.05
