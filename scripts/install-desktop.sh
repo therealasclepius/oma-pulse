@@ -21,7 +21,7 @@ Comment=Tasks, focus, notes, calendar and mail, within reach
 Exec="{exe}" open
 Icon=omaowl
 Terminal=false
-Categories=Office;Utility;
+Categories=Office;
 Keywords=productivity;todoist;focus;notes;calendar;assistant;
 Actions=Dashboard;Command;Assistant;
 
