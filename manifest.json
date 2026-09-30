@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "id": "kosta.omaowl",
   "name": "Oma Pulse",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "author": "Kosta / therealasclepius",
-  "description": "A themed desktop command center with Codex, voice input, tasks, focus, calendar, and HEY mail.",
+  "description": "A themed desktop command center with Codex, voice input, tasks, focus, calendar, and a choice of mail providers.",
   "kinds": [
     "service",
     "bar-widget"

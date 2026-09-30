@@ -12,6 +12,8 @@ function parse(raw) {
         || !Number.isFinite(s.focus.elapsed) || s.focus.elapsed < 0
         || !Number.isFinite(s.focus.duration) || s.focus.duration < 0
         || (s.taskSource !== undefined && ["local", "todoist"].indexOf(s.taskSource) < 0)
+        || (s.mailSource !== undefined && ["hey", "gmail", "outlook", "imap", "off"].indexOf(s.mailSource) < 0)
+        || (s.calendarSource !== undefined && ["omacal", "google", "off"].indexOf(s.calendarSource) < 0)
         || typeof s.focus.title !== "string"
         || s.tasks.some(function(t) { return !t || typeof t.id !== "string" || typeof t.title !== "string"; })
         || Object.keys(s.notes).some(function(k) { return typeof s.notes[k] !== "string"; }))

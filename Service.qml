@@ -34,8 +34,49 @@ Item {
     readonly property alias todoist: todoistController
     property bool mailEnabled: true
     readonly property alias hey: mailController
-    readonly property var newMail: hey ? hey.notifications.filter(m => m.unread) : []
-    HeyStore { id: mailController; active: root.mailEnabled }
+    readonly property string mailSource: workspace.mailSource || "hey"
+    readonly property string calendarSource: workspace.calendarSource || "omacal"
+    readonly property string mailName: ({hey:"HEY",gmail:"Gmail",outlook:"Outlook",imap:"IMAP",off:"Mail"})[mailSource]
+    readonly property string calendarName: calendarSource === "google" ? "Google Calendar" : calendarSource === "off" ? "Calendar off" : "OmaCal"
+    readonly property var mail: mailSource === "gmail" ? gmailController : mailSource === "outlook" ? outlookController : mailSource === "imap" ? imapController : mailController
+    readonly property var newMail: mailSource !== "off" && mail ? mail.notifications.filter(m => m.unread) : []
+    readonly property alias imap: imapController
+    readonly property alias gmail: gmailController
+    readonly property alias outlook: outlookController
+    readonly property alias googleCalendar: googleController
+    HeyStore { id: mailController; active: root.mailEnabled && root.mailSource === "hey" }
+    ProviderStore { id: gmailController; provider: "gmail"; active: root.ready && root.mailEnabled && root.mailSource === "gmail" }
+    ProviderStore { id: outlookController; provider: "outlook"; active: root.ready && root.mailEnabled && root.mailSource === "outlook" }
+    ProviderStore { id: imapController; provider: "imap"; active: root.ready && root.mailEnabled && root.mailSource === "imap" }
+    ProviderStore { id: googleController; provider: "google-calendar"; active: root.ready && root.calendarSource === "google"; onFeedChanged: if(root.calendarSource === "google") root.applyGoogleCalendar() }
+    function setMailSource(source) {
+        if (!ready || ["hey","gmail","outlook","imap","off"].indexOf(source)<0) return;
+        workspace=Object.assign({},workspace,{mailSource:source}); changed();
+    }
+    function setCalendarSource(source) {
+        if (!ready || ["omacal","google","off"].indexOf(source)<0) return;
+        workspace=Object.assign({},workspace,{calendarSource:source}); changed();
+    }
+    onCalendarSourceChanged: {
+        agenda=[]; agendaDays=[]; calendarClocks=({}); calendarTimezone=""; calendarToday=today;
+        if(calendarSource === "omacal") feed.reload();
+        else if(calendarSource === "google") { applyGoogleCalendar(); googleController.refreshIfStale(); }
+    }
+    function applyGoogleCalendar() {
+        agenda=googleController.events; agendaDays=googleController.days; calendarClocks=googleController.clocks;
+        calendarTimezone=googleController.timezone; calendarToday=googleController.today || today; agendaUpdated=Date.now();
+    }
+    function openMail(target) {
+        if (mailSource === "imap") {
+            if (/^https:\/\/[^\s/]+(?:[/?#]|$)/i.test(imapController.webmailUrl)) Quickshell.execDetached(["xdg-open",imapController.webmailUrl]);
+            return;
+        }
+        var homes={hey:"https://app.hey.com",gmail:"https://mail.google.com/mail/",outlook:"https://outlook.office.com/mail/"};
+        var allowed={hey:/^https:\/\/app\.hey\.com(?:[/?#]|$)/i,gmail:/^https:\/\/mail\.google\.com(?:[/?#]|$)/i,outlook:/^https:\/\/outlook\.(?:office\.com|office365\.com|live\.com)(?:[/?#]|$)/i};
+        if (!homes[mailSource]) return;
+        var destination=allowed[mailSource].test(target || "") ? target : homes[mailSource];
+        Quickshell.execDetached(mailSource === "hey" ? ["omarchy","launch","webapp",destination] : ["xdg-open",destination]);
+    }
     readonly property alias assistant: assistantController
     Assistant { id: assistantController; store: root }
     readonly property var localTasks: { taskRevision; return workspace.tasks.map(t => Object.assign({}, t)); }
@@ -93,7 +134,12 @@ Item {
         dismissWorkspace();
     }
     function openCalendar(date) {
+        if (calendarSource === "off") return;
         var day = /^\d{4}-\d{2}-\d{2}$/.test(date || "") ? date : calendarToday;
+        if (calendarSource === "google") {
+            Quickshell.execDetached(["xdg-open","https://calendar.google.com/calendar/u/0/r/day/" + day.replace(/-/g,"/") + "?authuser=" + encodeURIComponent(googleController.accountEmail)]);
+            dismissWorkspace(); return;
+        }
         // Raise an existing calendar even when it lives on another workspace.
         Quickshell.execDetached(["sh", "-c",
             'omacal "$1" >/dev/null 2>&1 & sleep 0.4; '
@@ -160,6 +206,7 @@ Item {
         printErrors: false
         onFileChanged: reload()
         onLoaded: {
+            if (root.calendarSource !== "omacal") return;
             try {
                 var f = JSON.parse(text());
                 root.agendaDays = Logic.calendarDays(f);
@@ -176,7 +223,7 @@ Item {
                 root.agendaUpdated = Date.now();
             } catch (e) { root.agenda = []; root.agendaDays = []; }
         }
-        onLoadFailed: { root.agenda = []; root.agendaDays = []; }
+        onLoadFailed: { if(root.calendarSource === "omacal") { root.agenda = []; root.agendaDays = []; } }
     }
     Timer { id: saveTimer; interval: 300; onTriggered: root.flush() }
     Timer {
@@ -195,7 +242,7 @@ Item {
             }
         }
     }
-    Timer { interval: 60000; repeat: true; running: true; onTriggered: feed.reload() }
+    Timer { interval: 60000; repeat: true; running: true; onTriggered: if(root.calendarSource === "omacal") feed.reload() }
     Instantiator {
         id: windows
         model: Quickshell.screens
@@ -221,9 +268,10 @@ Item {
         function tab(name: string): void { root.eachWindow(w => { w.workspacePanel.insights = name === "Insights"; w.pinned = true; w.open(); }); }
         function status(): string {
             var panels = []; root.eachWindow(w => panels.push({screen: w.screen.name, expanded: w.expanded, dashboard: w.dashboardOpen, command: w.commandOpen, timerPopout: w.timerPopout.visible, tab: w.currentTab, hovered: w.hovered}));
-            return JSON.stringify({ready: root.ready, error: root.error, tasks: root.tasks.length, remaining: root.remainingTasks, taskSource: root.taskSource, todoistConnected: todoistController.connected, todoistBusy: todoistController.busy, todoistError: todoistController.error, running: root.focusState.running, timer: root.timerText, agendaEvents: root.agenda.length, calendarDays: root.agendaDays.length, windows: panels});
+            return JSON.stringify({ready: root.ready, error: root.error, tasks: root.tasks.length, remaining: root.remainingTasks, taskSource: root.taskSource, mailSource: root.mailSource, calendarSource: root.calendarSource, todoistConnected: todoistController.connected, todoistBusy: todoistController.busy, todoistError: todoistController.error, running: root.focusState.running, timer: root.timerText, agendaEvents: root.agenda.length, calendarDays: root.agendaDays.length, windows: panels});
         }
-        function mailStatus(): string { return JSON.stringify({connected: root.hey.connected, authenticated: root.hey.authenticated, newForYou: root.newMail.length, busy: root.hey.busy, error: root.hey.lastError}); }
+        function connections(): void { root.eachWindow(w => { w.pinned=true; w.open(); w.workspacePanel.connectionsOpen=true; }); }
+        function mailStatus(): string { return JSON.stringify({provider:root.mailSource,connected: root.mail.connected, authenticated: root.mail.authenticated, newForYou: root.newMail.length, busy: root.mail.busy, error: root.mail.lastError}); }
     }
     Control { target: "omapulse" }
     Control { target: "omaowl" } // Compatibility for existing shortcuts.

@@ -17,13 +17,16 @@ PanelWindow {
     property bool accountOpen: false
     property bool awaitingEntry: false
     readonly property bool hovered: workspaceHover.hovered
-    readonly property bool editing: taskInput.activeFocus || notes.activeFocus || tokenInput.activeFocus || minutesInput.activeFocus || remindersPopup.visible || (assistantOpen && assistantPane.editing)
+    readonly property bool editing: taskInput.activeFocus || notes.activeFocus || tokenInput.activeFocus || minutesInput.activeFocus || remindersPopup.visible || connectionsOpen || (assistantOpen && assistantPane.editing)
     readonly property alias reminderPopup: remindersPopup
     readonly property real uiScale: compact ? 0.82 : 1
     property string taskView: "Today"
     property bool insights: false
     property bool assistantOpen: false
-    onAssistantOpenChanged: if (assistantOpen) Qt.callLater(() => assistantPane.focusInput())
+    property bool connectionsOpen: false
+    onAssistantOpenChanged: if (assistantOpen) { connectionsOpen=false; Qt.callLater(() => assistantPane.focusInput()); }
+    onConnectionsOpenChanged: if (connectionsOpen) { assistantOpen=false; insights=false; }
+    onInsightsChanged: if (insights) connectionsOpen=false
     property string calendarDate: store.calendarToday
     readonly property int calendarIndex: store.agendaDays.findIndex(d => d.date === dash.calendarDate)
     readonly property var calendarDay: store.agendaDays[Math.max(0, calendarIndex)] || null
@@ -38,7 +41,7 @@ PanelWindow {
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: visible ? (compact ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.Exclusive) : WlrKeyboardFocus.None
     color: "transparent"
-    onVisibleChanged: if (visible) { awaitingEntry = compact; page.forceActiveFocus(); if (assistantOpen) Qt.callLater(() => assistantPane.focusInput()); if (store.useTodoist) store.todoist.refreshIfStale(); store.hey.refreshIfStale(); if (compact && !pinned) leaveTimer.restart(); } else { remindersPopup.close(); store.assistant.cancelVoice(); }
+    onVisibleChanged: if (visible) { awaitingEntry = compact; page.forceActiveFocus(); if (assistantOpen) Qt.callLater(() => assistantPane.focusInput()); if (store.useTodoist) store.todoist.refreshIfStale(); store.mail.refreshIfStale(); if(store.calendarSource === "google") store.googleCalendar.refreshIfStale(); if (compact && !pinned) leaveTimer.restart(); } else { remindersPopup.close(); store.assistant.cancelVoice(); }
     onEditingChanged: if (!editing && !hovered) leaveTimer.restart()
     Timer { id: leaveTimer; interval: dash.awaitingEntry ? 1200 : 700; onTriggered: if (dash.compact && dash.visible && !dash.hovered && !dash.pinned && !dash.editing) dash.close() }
     Rectangle { anchors.fill: parent; color: theme.background; radius: 0; border.width: dash.compact ? 1 : 0; border.color: theme.border }
@@ -50,6 +53,7 @@ PanelWindow {
     function eventClock(ms) { return store.calendarClocks[String(ms)] || Qt.formatTime(new Date(ms), "h:mm AP"); }
     Connections {
         target: dash.store
+        function onAgendaDaysChanged() { if(dash.store.agendaDays.length && !dash.store.agendaDays.some(d=>d.date === dash.calendarDate)) dash.calendarDate=dash.store.agendaDays[0].date; }
         function onTaskAdded(title) { if (taskInput.text.trim() === title) taskInput.text = ""; }
     }
 
@@ -98,15 +102,16 @@ PanelWindow {
                     Label { text: "A little room for your day."; color: theme.muted; font.pixelSize: 13 }
                 }
                 Item { Layout.fillWidth: true }
-                Action { text: "Workspace"; dark: true; selected: !dash.insights && !dash.assistantOpen; onClicked: { dash.insights = false; dash.assistantOpen = false; } }
-                Action { text: "Assistant"; dark: true; selected: dash.assistantOpen; onClicked: { dash.assistantOpen = true; dash.insights = false; } }
-                Action { text: "Insights"; dark: true; selected: dash.insights && !dash.assistantOpen; onClicked: { dash.insights = true; dash.assistantOpen = false; } }
+                Action { text: "Workspace"; dark: true; selected: !dash.insights && !dash.assistantOpen && !dash.connectionsOpen; onClicked: { dash.insights = false; dash.assistantOpen = false; dash.connectionsOpen = false; } }
+                Action { text: "Assistant"; dark: true; selected: dash.assistantOpen; onClicked: { dash.assistantOpen = true; dash.insights = false; dash.connectionsOpen = false; } }
+                Action { text: "Insights"; dark: true; selected: dash.insights && !dash.assistantOpen; onClicked: { dash.insights = true; dash.assistantOpen = false; dash.connectionsOpen = false; } }
+                Action { text: "Connections"; dark: true; selected: dash.connectionsOpen; onClicked: { dash.connectionsOpen=true; dash.assistantOpen=false; dash.insights=false; } }
                 Action { visible: dash.compact; text: dash.pinned ? "Pinned" : "Pin"; dark: true; selected: dash.pinned; onClicked: { dash.pinned = !dash.pinned; if (!dash.pinned && !dash.hovered) leaveTimer.restart(); } }
                 Action { text: dash.compact ? "⤢  Full screen" : "↙  Compact"; dark: true; onClicked: dash.compact ? dash.expandRequested() : dash.close() }
                 Action { text: "×"; dark: true; onClicked: dash.close(); Accessible.name: "Close full screen" }
             }
             RowLayout {
-                visible: !dash.insights && !dash.assistantOpen
+                visible: !dash.insights && !dash.assistantOpen && !dash.connectionsOpen
                 Layout.fillWidth: true; Layout.fillHeight: true; spacing: 18
                 Card {
                     color: theme.tasks; Layout.fillHeight: true; Layout.fillWidth: true; Layout.preferredWidth: 420
@@ -248,7 +253,11 @@ PanelWindow {
                         anchors.fill: parent; anchors.margins: 24; anchors.topMargin: 35; spacing: 16
                         Label { text: "Events"; font.pixelSize: 22; font.weight: Font.DemiBold }
                         RowLayout {
-                            Label { Layout.fillWidth: true; text: dash.calendarDay ? dash.calendarDay.label : "Calendar"; font.pixelSize: 13 }
+                            ColumnLayout {
+                                Layout.fillWidth: true; spacing: 3
+                                Label { Layout.fillWidth: true; visible: !!dash.calendarDay; text: dash.calendarDay ? Qt.formatDate(new Date(dash.calendarDay.date + "T12:00:00"), "dddd") : ""; font.pixelSize: 14; font.weight: Font.DemiBold }
+                                Label { Layout.fillWidth: true; text: dash.calendarDay ? dash.calendarDay.label : "Calendar"; font.pixelSize: 13 }
+                            }
                             Action { objectName: "dashboard-previous"; text: "‹"; enabled: dash.calendarIndex > 0; onClicked: dash.moveDay(-1) }
                             Action { objectName: "dashboard-next"; text: "›"; enabled: dash.calendarIndex < dash.store.agendaDays.length - 1; onClicked: dash.moveDay(1) }
                         }
@@ -278,10 +287,11 @@ PanelWindow {
                             Column {
                                 anchors.centerIn: parent; width: parent.width; spacing: 12; visible: parent.count === 0
                                 Label { width: parent.width; text: "Nothing scheduled"; font.pixelSize: 21; font.weight: Font.DemiBold; horizontalAlignment: Text.AlignHCenter }
-                                Label { width: parent.width; text: dash.store.agendaDays.length ? "Pick another day with the arrows above." : "Connect your calendars in OmaCal to see events here."; font.pixelSize: 14; wrapMode: Text.Wrap; horizontalAlignment: Text.AlignHCenter; opacity: 0.65 }
+                                Label { width: parent.width; text: dash.store.agendaDays.length ? "Pick another day with the arrows above." : dash.store.calendarSource === "off" ? "Calendar is off. Choose a source in Connections." : dash.store.calendarSource === "google" ? "Connect Google Calendar in Connections to see events here." : "Connect your calendars in OmaCal to see events here."; font.pixelSize: 14; wrapMode: Text.Wrap; horizontalAlignment: Text.AlignHCenter; opacity: 0.65 }
                             }
                         }
-                        Label { Layout.fillWidth: true; text: "OmaCal · " + dash.store.agendaDays.length + " days available"; font.pixelSize: 12; opacity: 0.65 }
+                        Label { visible: dash.store.calendarSource === "google" && !!dash.store.googleCalendar.lastError; text: dash.store.googleCalendar.lastError; Layout.fillWidth: true; wrapMode: Text.Wrap; color: theme.urgent; font.pixelSize: 12 }
+                        Label { Layout.fillWidth: true; text: dash.store.calendarName + " · " + dash.store.agendaDays.length + " days available"; font.pixelSize: 12; opacity: 0.65 }
                     }
                 }
                 Card {
@@ -289,9 +299,10 @@ PanelWindow {
                     HeyMail { anchors.fill: parent; anchors.margins: 24; anchors.topMargin: 35; store: dash.store }
                 }
             }
+            ConnectionsPane { store: dash.store; visible: dash.connectionsOpen; Layout.fillWidth: true; Layout.fillHeight: true; onTodoistSetupRequested: { dash.connectionsOpen=false; dash.accountOpen=true; } }
             AssistantPane { id: assistantPane; visible: dash.assistantOpen; Layout.fillWidth: true; Layout.fillHeight: true; store: dash.store }
             Rectangle {
-                visible: dash.insights && !dash.assistantOpen; Layout.fillWidth: true; Layout.fillHeight: true; color: theme.focus; radius: 0
+                visible: dash.insights && !dash.assistantOpen && !dash.connectionsOpen; Layout.fillWidth: true; Layout.fillHeight: true; color: theme.focus; radius: 0
                 ColumnLayout {
                     anchors.fill: parent; anchors.margins: 48; spacing: 24
                     Label { text: "The work you put in"; font.pixelSize: 34; font.weight: Font.DemiBold }

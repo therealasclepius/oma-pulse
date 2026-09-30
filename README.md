@@ -47,12 +47,17 @@ Oma Pulse is the new name from version 0.6.0. The original GitHub URL redirects 
 
 ## Connections
 
-All integrations are optional and installed separately:
+Open **Connections** to choose your task, mail and calendar providers. Local tasks need no account; you can switch between HEY, Gmail, Outlook and IMAP mail, and between OmaCal and direct Google Calendar. See the [connection setup guide](CONNECTIONS.md). New Google/Microsoft adapters are beta and require your own OAuth app registration; live-account sign-in has not yet been verified.
+
+All integrations are optional:
 
 | Connection | Setup | Adds |
 | --- | --- | --- |
 | Todoist | Switch Local to Todoist, then Account → API key | Synced tasks, Quick Add and reminders |
 | OmaCal | Install OmaCal and connect a calendar there | Read-only daily event feed and links to the full calendar |
+| IMAP | Connections → TLS server, username and app password | Unread headers, mark read and Undo |
+| Gmail / Outlook | Connections → account setup with your OAuth client ID | Unread inbox, mark read and Undo |
+| Google Calendar | Connections → Google Calendar OAuth setup | Read-only eight-day feed without OmaCal |
 | HEY | Install a compatible `hey` CLI and run `hey auth login` | New for You, mark read and Undo |
 | Codex | Install Codex CLI and run `codex login` | Assistant answers and supported desktop actions |
 | Voxtype | Install and configure Voxtype's daemon | Dictation into the command input |
@@ -98,7 +103,7 @@ Use ‹ / › in the Events card to switch days, and **Back to today** to reset.
 The date and full day's events change together. Arrows stop at the limits of
 OmaCal's feed, currently today plus seven days. Event times use OmaCal's published
 clock labels where available. Calendar access is read only; synchronization is
-managed by OmaCal. No extra calendar account connection is needed. Clicking an event opens the full OmaCal app on that day and closes Oma Pulse.
+managed by OmaCal. No extra calendar account connection is needed for the OmaCal source. Alternatively, select Google Calendar in Connections and sign in directly; the default is your primary calendar. Clicking an event opens the selected full calendar on that day and closes Oma Pulse. Weekday names appear above dates.
 
 ## Focus and notes
 

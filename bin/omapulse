@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 case "${1:-open}" in
-  open|command|assistant|dashboard|close|status|toggle) action="${1:-open}" ;;
-  --version) echo 'Oma Pulse 0.6.0'; exit 0 ;;
-  --help|-h) echo 'Usage: omapulse [open|command|assistant|dashboard|close|status|toggle]'; exit 0 ;;
+  open|command|assistant|connections|dashboard|close|status|toggle) action="${1:-open}" ;;
+  --version) echo 'Oma Pulse 0.7.0'; exit 0 ;;
+  --help|-h) echo 'Usage: omapulse [open|command|assistant|connections|dashboard|close|status|toggle]'; exit 0 ;;
   *) echo 'Unknown command. Run omapulse --help.' >&2; exit 2 ;;
 esac
 if ! command -v omarchy-shell >/dev/null; then

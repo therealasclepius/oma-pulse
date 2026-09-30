@@ -66,3 +66,13 @@ test("every public HTML page includes the creator's social handles", () => {
     assert(!html.includes("<!-- SITE_FOOTER -->"));
   }
 });
+
+test("provider choices persist while unknown values are rejected", () => {
+  const state = context.fresh();
+  for (const source of ["hey", "gmail", "outlook", "imap", "off"]) {
+    state.mailSource=source; state.calendarSource="google";
+    assert.equal(context.parse(JSON.stringify(state)).mailSource,source);
+  }
+  state.mailSource="invalid";
+  assert.throws(() => context.parse(JSON.stringify(state)));
+});

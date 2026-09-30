@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.7.0
+
+- Added a Connections screen with persistent task, mail and calendar choices.
+- Added beta Gmail and Outlook inbox adapters with user-owned OAuth setup, plus TLS IMAP with app-password setup.
+- Added beta direct Google Calendar support, including calendar timezone, recurring and multi-day events.
+- Preserved HEY, Todoist and OmaCal integrations; local tasks also work with assistant commands.
+- Added full weekday names to calendar headings.
+- Added connection setup documentation and updated the public website with supported choices and setup requirements.
+- New adapters have automated protocol/UI coverage; live provider verification requires configured accounts.
+
 ## 0.6.0
 
 - Renamed Oma Owl to **Oma Pulse**, with new branding, a pulse icon and an `omapulse` launcher.
