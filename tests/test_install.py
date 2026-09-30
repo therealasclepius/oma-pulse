@@ -50,4 +50,4 @@ class InstallTests(unittest.TestCase):
             self.assertFalse(legacy.exists())
             self.assertTrue(list((home/'.local/share/omaowl-backups').glob('launcher-*/omaowl.desktop')))
             self.assertIn('Oma Pulse',run([str(home/'.local/bin/omapulse'),'--version']).stdout)
-            self.assertIn('0.7.0',run([str(home/'.local/bin/omaowl'),'--version']).stdout)
+            self.assertIn(json.loads((ROOT/'manifest.json').read_text())['version'],run([str(home/'.local/bin/omaowl'),'--version']).stdout)

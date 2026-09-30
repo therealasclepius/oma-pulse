@@ -40,7 +40,7 @@ Item {
     function remind(taskId, when) { return send({action: "remind", id: taskId, when: when}); }
     Process {
         id: worker
-        command: ["python3", Qt.resolvedUrl("todoist.py").toString().replace("file://", "")]
+        command: ["timeout", "90s", "python3", Qt.resolvedUrl("todoist.py").toString().replace("file://", "")]
         onStarted: { write(JSON.stringify(root.payload) + "\n"); stdinEnabled = false; root.payload = ({}); }
         stdout: StdioCollector {
             onStreamFinished: {
@@ -67,7 +67,8 @@ Item {
         }
         onExited: function(code) {
             root.payload = ({});
-            if (code !== 0 || !root.received) root.error = "Todoist connection stopped. Try refreshing.";
+            if (code === 124) root.error = "Todoist timed out. Refresh and try again.";
+            else if (code !== 0 || !root.received) root.error = "Todoist connection stopped. Try refreshing.";
         }
     }
     Timer { id: refreshSoon; interval: 150; onTriggered: root.refresh() }

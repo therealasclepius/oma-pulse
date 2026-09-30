@@ -182,7 +182,12 @@ def run(payload):
 
 def main():
     try:
-        payload = json.loads(sys.stdin.read(65536))
+        # Quickshell sends one JSON line. Do not wait for EOF: a reused process
+        # input channel can stay open and otherwise leave every task disabled.
+        raw = sys.stdin.readline(65537)
+        if len(raw) > 65536:
+            raise ApiError("Todoist request is too large.")
+        payload = json.loads(raw)
         result = run(payload)
     except ApiError as e:
         result = {"ok": False, "connected": bool(saved_token()), "error": str(e)}

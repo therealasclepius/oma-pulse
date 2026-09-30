@@ -1,6 +1,6 @@
 {
   "name": "oma-pulse",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "private": true,
   "license": "UNLICENSED",
   "description": "A native Omarchy workspace for tasks, focus, notes, calendar, mail and an assistant.",

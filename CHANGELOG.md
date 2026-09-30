@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.1
+
+- Fixed Todoist helpers waiting for input EOF, which could leave syncing stuck and task checkboxes disabled.
+- Read each JSON-line request immediately and bound helper execution to 90 seconds, with a retryable timeout message.
+- Added a regression check that holds stdin open and verifies the request still completes.
+
 ## 0.7.0
 
 - Added a Connections screen with persistent task, mail and calendar choices.

@@ -17,6 +17,23 @@ class TodoistTest(unittest.TestCase):
         api.DATA = Path(self.temp.name) / 'data'
         api.atomic(api.CONFIG / 'todoist.json', {'token': 'fixture-token-never-sent'})
     def tearDown(self): self.temp.cleanup()
+    def test_request_finishes_without_waiting_for_stdin_eof(self):
+        import select
+        import subprocess
+        import sys
+        script = "import todoist; todoist.run=lambda p: {'ok':True,'closed':p['id']}; todoist.main()"
+        proc = subprocess.Popen([sys.executable, '-c', script], cwd=Path(__file__).resolve().parent.parent,
+                                stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        try:
+            proc.stdin.write(json.dumps({'action':'close','id':'fixture-123'})+'\n'); proc.stdin.flush()
+            ready, _, _ = select.select([proc.stdout], [], [], 2)
+            self.assertTrue(ready, 'A complete JSON-line request must not wait for stdin to close')
+            self.assertEqual(json.loads(proc.stdout.readline())['closed'], 'fixture-123')
+            proc.wait(timeout=2)
+        finally:
+            if proc.poll() is None: proc.kill()
+            proc.communicate()
+
     def test_pagination(self):
         with patch.object(api, 'request', side_effect=[{'results':[{'id':'a'}], 'next_cursor':'cursor / 2'}, {'results':[{'id':'b'}], 'next_cursor':None}]) as request:
             self.assertEqual(len(api.pages('fixture','tasks')),2)
